@@ -13,26 +13,6 @@ get_ipython().run_cell_magic('writefile', 'app.py', '\n\n# Upload the classifier
 get_ipython().system('streamlit run app.py')
 
 
-# In[2]:
-
-
-pip install ipython
-
-
-# In[3]:
-
-
-pip install nbconvert
-
-
-# In[7]:
-
-
-ipython nbconvert-- to script ObjectTrackingFromPy.ipynb
-
-
-# In[ ]:
-
 
 
 
