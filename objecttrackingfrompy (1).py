@@ -3,12 +3,12 @@ import torch.nn as nn
 from torchvision import datasets, transforms, models
 from PIL import Image
 import cv2
-  Import python libraries
+  #Import python libraries
 import numpy as np
 import numpy as np
 import cv2
 from ultralytics import YOLO
-  Import python libraries
+  #Import python libraries
 import numpy as np
 from scipy.optimize import linear_sum_assignment
 import tempfile
@@ -392,11 +392,11 @@ debug = 0
 
 
 
-  Import python libraries
+  #Import python libraries
 import cv2
 import copy
 import math
-  Variables for drawing
+  #Variables for drawing
 drawing = False    True if mouse is pressed
 ix, iy = -1, -1    Initial x, y
 fx, fy = -1, -1    Final x, y
@@ -436,7 +436,7 @@ def count_in_out_tracks(box, tracks):
 
 
 def drawBox(img):
-      Load image
+      #Load image
     clone = cv2.resize(img.copy(), None, fx=0.4, fy=0.4)
 
     cv2.namedWindow('image')
@@ -524,15 +524,14 @@ import pandas as pd
 
 
 skipFrames = 2
-  Variables for drawing
+  #Variables for drawing
 drawing = False    True if mouse is pressed
 ix, iy = -1, -1    Initial x, y
 fx, fy = -1, -1    Final x, y
 rectangle = None
 records = []
 
-  (Other functions like is_inside, count_in_out_tracks, draw_rectangle, getEntranceCoords)
- tqdm
+ 
 import tempfile
 
 def process_video(uploaded_video):
@@ -553,13 +552,13 @@ def process_video(uploaded_video):
     beesOut = set()
     pollenIn = set()
 
-      Create Object Detector
+      #Create Object Detector
     detector = Detectors()
 
-      Create Object Tracker
+      #Create Object Tracker
     tracker = Tracker(160, 1, 7, 100)
 
-      Variables initialization
+      #Variables initialization
     skip_frame_count = 0
     track_colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (0, 255, 255), (255, 0, 255), (255, 127, 255),  (127, 0, 255), (127, 0, 127)]
     pause = False
@@ -568,31 +567,31 @@ def process_video(uploaded_video):
     frame_number = 0    To keep track of frames
 
     ret, prevframe = cap.read()
-     prevframe = cv2.resize(prevframe.copy(), None, fx=0.6, fy=0.6)
+    prevframe = cv2.resize(prevframe.copy(), None, fx=0.6, fy=0.6)
 
 
                                                                                                          
-      Ask the user to specify the entrance of the beehive
+      #Ask the user to specify the entrance of the beehive
     box = getEntranceCoords(prevframe)
     box2 =  drawBox(prevframe)
                                                                                                         
 
-      Initialize VideoWriter to save the video
+      #Initialize VideoWriter to save the video
     fourcc = cv2.VideoWriter_fourcc(*'XVID')    Codec
     out = cv2.VideoWriter('slow55.mp4', fourcc, fps, (int(cap.get(3)), int(cap.get(4))))    (Width, Height)
 
-      Infinite loop to process video frames
+      #Infinite loop to process video frames
     while(True):
 
         frame_number += 1    Increment frame count
-          Calculate time
+          #Calculate time
         seconds = frame_number / fps
         minutes = int(seconds // 60)
         seconds = int(seconds % 60)
-          Format timestamp nicely
+         # Format timestamp nicely
         timestamp = f"{minutes:02d}:{seconds:02d}"
 
-          Capture frame-by-frame
+          #Capture frame-by-frame
         ret, currentFrame = cap.read()
         currentFrame = cv2.resize(currentFrame.copy(), None, fx=0.4, fy=0.4)
             Draw entrance rectangle
@@ -601,20 +600,20 @@ def process_video(uploaded_video):
         if not ret:
             break
 
-          Make copy of original frame
+          #Make copy of original frame
         orig_frame = copy.copy(currentFrame)
 
-          Skip initial frames that display logo
+          #Skip initial frames that display logo
         if (skip_frame_count < 15):
             skip_frame_count += 1
             continue
 
-          Detect and return centroids of the objects in the frame
+          #Detect and return centroids of the objects in the frame
         centers, currentFrame, classes = detector.Detect(currentFrame)
 
-          If centroids are detected then track them
+         # If centroids are detected then track them
         if len(centers) > 0:
-              Track object using Kalman Filter
+             # Track object using Kalman Filter
             tracker.Update(centers, classes)
             beesTrackedIn, pollenTrackedIn, beesTrackedOut = count_in_out_tracks(box, tracker.tracks)
 
@@ -634,7 +633,7 @@ def process_video(uploaded_video):
 
             records.append([timestamp, len(beesIn),len(pollenIn),len(beesOut)])
 
-          Draw tracking lines for each object
+          #Draw tracking lines for each object
         for i in range(len(tracker.tracks)):
             if len(tracker.tracks[i].trace) > 1:
                 for j in range(len(tracker.tracks[i].trace) - 1):
@@ -650,23 +649,23 @@ def process_video(uploaded_video):
                     cv2.putText(currentFrame, str(tracker.tracks[i].classes[j]), (mid_x, mid_y),
                                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, track_colors[clr], 2)
 
-          Add dashboard texts
+         # Add dashboard texts
         cv2.putText(currentFrame, f"Total Count: {len(allTracks)}", (10, 40),  cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 255), 2)
         cv2.putText(currentFrame, f"Bees In: {len(beesIn)}", (10, 70),  cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 255), 2)
         cv2.putText(currentFrame, f"Pollen In: {len(pollenIn)}", (10, 100),  cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 255), 2)
         cv2.putText(currentFrame, f"Bees Out: {len(beesOut)}", (10, 130),   cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 255), 2)
         cv2.putText(currentFrame, f"Time: {timestamp}", (10, 160),  cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 255), 2)
 
-          Draw entrance rectangle
+          #Draw entrance rectangle
         cv2.rectangle(currentFrame, box[:2], box[2:], (255, 255, 255), 2)
         cv2.imshow('frame',currentFrame)
           Write the frame to the video output
         out.write(currentFrame)
 
-          Slow down the FPS
+         # Slow down the FPS
         cv2.waitKey(50)
 
-      When everything done, release the capture and writer
+     # When everything done, release the capture and writer
     cap.release()
     out.release()
     cv2.destroyAllWindows()
@@ -747,7 +746,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-  --- Load and Display SVG ---
+ 
 def get_svg_base64(svg_path):
     with open(svg_path, "rb") as f:
         return base64.b64encode(f.read()).decode()
@@ -759,7 +758,7 @@ def render_svg_image(svg_path, width="300px", height="auto"):
         img_tag = f"<img src='data:image/svg+xml;base64,{encoded}' class='bee-image' />"
         st.markdown(img_tag, unsafe_allow_html=True)
 
-  --- App Title and Logo (Centered) ---
+  
 logo_svg = get_svg_base64("bee_logo.svg")
 header_html = f"""
 <div class="header-container">
@@ -800,7 +799,6 @@ with st.container():
 
         st.markdown('</div>', unsafe_allow_html=True)
 
-  --- Footer ---
 st.markdown('<div class="footer">Made for Beekeepers </div>', unsafe_allow_html=True)
 
 
