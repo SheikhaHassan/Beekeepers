@@ -14,9 +14,7 @@ from scipy.optimize import linear_sum_assignment
 import tempfile
 
 
- ----Tracker,Detection, Classifier Model ---
- !/usr/bin/env python
-  coding: utf-8
+
 def dprint(*args, **kwargs):
         """Debug print function using inbuilt print
         Args:
@@ -213,7 +211,7 @@ class Detectors(object):
              return centers , frame , classes
 
 
-      In[8]:
+
 
 
 
@@ -384,14 +382,12 @@ class Tracker(object):
             self.tracks[i].KF.lastResult = self.tracks[i].prediction
 
 
-  In[22]:
 
 
 
 
 
-
-  set to 1 for pipeline images
+ set to 1 for pipeline images
 debug = 0
 
 
