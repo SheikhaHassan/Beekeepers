@@ -29,7 +29,7 @@ else:
     print("Model file already exists.")
 
 # Now load the model
-model = torch.load(local_path, map_location=torch.device('cpu'))
+model = torch.load(local_path, map_location=lambda storage, loc: storage.cpu())
 model.eval()
 
 
@@ -149,7 +149,7 @@ class Detectors(object):
                 ])
     
             # Load pretrained ResNet18
-            device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+           device = torch.device("cpu")
     
             # Replace the final fully connected layer for binary classification
             self.classifier = models.resnet18(pretrained=False)
@@ -157,7 +157,7 @@ class Detectors(object):
             self.classifier.fc = nn.Linear(num_ftrs, 2)
     
     
-            self.classifier.load_state_dict(torch.load("90F1ScoreModel.pth", map_location=torch.device('cpu') ))
+            self.classifier.load_state_dict(torch.load("90F1ScoreModel.pth", map_location=torch.device('cpu')))
             self.classifier.eval()
 
         def Detect(self, frame):
