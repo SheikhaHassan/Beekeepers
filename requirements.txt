@@ -7,3 +7,5 @@ torch
 torchvision
 ultralytics
 scipy
+requests
+os
