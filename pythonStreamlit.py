@@ -18,20 +18,6 @@ import os
 import urllib.request
 import torch
 
-url = "https://github.com/SheikhaHassan/Beekeepers/releases/download/v1.0.0/90F1ScoreModel.pth"
-local_path = "90F1ScoreModel.pth"
-
-if not os.path.exists(local_path):
-    print("Downloading model file...")
-    urllib.request.urlretrieve(url, local_path)
-    print("Download complete.")
-else:
-    print("Model file already exists.")
-
-# Now load the model
-model = torch.load(local_path, map_location=lambda storage, loc: storage.cpu())
-model.eval()
-
 
 #----Tracker,Detection, Classifier Model ---
 #!/usr/bin/env python
@@ -135,30 +121,38 @@ class KalmanFilter(object):
 
 
 class Detectors(object):
-        """Detectors class to detect objects in video frame
-        Attributes:
-            None
-        """
-        def __init__(self):
-            self.model = YOLO("last.pt")
-            # Data transforms (Including Data Augmentation)
-            self.transform = transforms.Compose([
-                    transforms.Resize(256),
-                    transforms.ToTensor(),
-                    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
-                ])
+    """Detectors class to detect objects in video frame"""
     
-            # Load pretrained ResNet18
-            device = torch.device("cpu")
-    
-            # Replace the final fully connected layer for binary classification
-            self.classifier = models.resnet18(pretrained=False)
-            num_ftrs = self.classifier.fc.in_features
-            self.classifier.fc = nn.Linear(num_ftrs, 2)
-    
-    
-            self.classifier.load_state_dict(torch.load("90F1ScoreModel.pth", map_location=torch.device('cpu')))
-            self.classifier.eval()
+    def __init__(self):
+        # Download the model file if it doesn't exist
+        model_path = "90F1ScoreModel.pth"
+        url = "https://github.com/SheikhaHassan/Beekeepers/releases/download/v1.0.0/90F1ScoreModel.pth"
+        
+        if not os.path.exists(model_path):
+            print("Downloading model file...")
+            urllib.request.urlretrieve(url, model_path)
+            print("Download complete.")
+        else:
+            print("Model file already exists.")
+        
+        # Load the YOLO model (replace 'last.pt' with your actual YOLO weights if needed)
+        self.model = YOLO("last.pt")
+        
+        # Define the transforms
+        self.transform = transforms.Compose([
+            transforms.Resize(256),
+            transforms.ToTensor(),
+            transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+        ])
+        
+        # Initialize classifier (ResNet18) and load trained weights
+        self.classifier = models.resnet18(pretrained=False)
+        num_ftrs = self.classifier.fc.in_features
+        self.classifier.fc = nn.Linear(num_ftrs, 2)  # binary classification
+        
+        # Load the trained weights and set model to eval mode
+        self.classifier.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
+        self.classifier.eval()
 
         def Detect(self, frame):
             """Detect objects in video frame using following pipeline
