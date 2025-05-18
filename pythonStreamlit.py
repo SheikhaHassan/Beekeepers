@@ -149,7 +149,7 @@ class Detectors(object):
                 ])
     
             # Load pretrained ResNet18
-           device = torch.device("cpu")
+            device = torch.device("cpu")
     
             # Replace the final fully connected layer for binary classification
             self.classifier = models.resnet18(pretrained=False)
