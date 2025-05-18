@@ -15,24 +15,23 @@ from scipy.optimize import linear_sum_assignment
 import tempfile
 
 import os
-import requests
+import urllib.request
+import torch
 
 url = "https://github.com/SheikhaHassan/Beekeepers/releases/download/v1.0.0/90F1ScoreModel.pth"
 local_path = "90F1ScoreModel.pth"
 
 if not os.path.exists(local_path):
     print("Downloading model file...")
-    response = requests.get(url)
-    with open(local_path, 'wb') as f:
-        f.write(response.content)
+    urllib.request.urlretrieve(url, local_path)
     print("Download complete.")
 else:
     print("Model file already exists.")
 
 # Now load the model
-import torch
-model = torch.load(local_path)
+model = torch.load(local_path, map_location=torch.device('cpu'))
 model.eval()
+
 
 #----Tracker,Detection, Classifier Model ---
 #!/usr/bin/env python
