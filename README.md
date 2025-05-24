@@ -1,9 +1,6 @@
 # Hive Guard Bee Density Analyzer
 A simple and user-friendly Streamlit web app that integrates a custom AI model for bee tracking, detection, and classification. Beekeepers can upload beehive videos, specify the entrance area, and receive a downloadable Excel log of bee activity, including timestamps for bees entering, exiting, and carrying pollen.
 
-
-This is a local Python application for analyzing the density of guard bees at the entrance of a beehive using a video input. The user is guided through a simple process involving video upload, drawing areas of interest, and exporting results as an Excel file.
-
 ---
 
 ## Features
