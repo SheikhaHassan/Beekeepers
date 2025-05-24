@@ -437,7 +437,7 @@ def drawBox(img):
             cv2.rectangle(temp, (ix, iy), (fx, fy), (0, 255, 0), 2)
 
         # Display helper text
-        cv2.putText(temp, "Press [ENTER] to finalize coords", (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 1)
+        cv2.putText(temp, "Press [ENTER] to finalize coords", (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 1)
 
         cv2.imshow('image', temp)
 
